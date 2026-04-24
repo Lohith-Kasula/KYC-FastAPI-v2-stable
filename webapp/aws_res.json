@@ -1,0 +1,14 @@
+{
+    "Compared_faces_result": {
+        "Aadhar_UIDAI,Aadhar_card": {
+            "result": false,
+            "confidence_score": 99.99980926513672
+        },
+        "Aadhar_UIDAI,Webcam_image": {},
+        "PAN_card_image,Webcam_image": {},
+        "Aadhar_UIDAI,PAN_card": {
+            "result": true
+        }
+    },
+    "mandatory_check_passed": false
+}

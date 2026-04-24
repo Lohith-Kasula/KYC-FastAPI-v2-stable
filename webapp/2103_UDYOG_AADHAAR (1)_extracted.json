@@ -1,0 +1,41 @@
+{
+  "Udyam_Registration_Number": "UDY AM-AP-03-0088159",
+  "Name_of_Enterprise": "",
+  "Type_of_Enterprise": "",
+  "Major_Activity": "",
+  "Date_of_Udyam_Registration": "",
+  "Social_Category": "",
+  "Date_of_Incorporation": "",
+  "Date_of_Commencement": "",
+  "Official_Address": {},
+  "NIC_Codes": [
+    {
+      "NIC 2 ID": "03",
+      "NIC 4 ID": "",
+      "NIC 5 ID": "",
+      "NIC 2 Text": "NAME OF ENTERPRISE SANTHI F AST FOOD CENTRE",
+      "NIC 4 Text": "MAJOR ACTIVITY MANUF ACTURING",
+      "NIC 5 Text": "",
+      "activity": ""
+    },
+    {
+      "NIC 2 ID": "56",
+      "NIC 4 ID": "",
+      "NIC 5 ID": "",
+      "NIC 2 Text": "CLASSIFICA TION CODE(S)SNo. NIC 2 Digit NIC 4 Digit NIC 5 Digit Activity",
+      "NIC 4 Text": "1 56 - Food and beverage",
+      "NIC 5 Text": "service activities5629 - Other food service",
+      "activity": "Services"
+    },
+    {
+      "NIC 2 ID": "16",
+      "NIC 4 ID": "",
+      "NIC 5 ID": "",
+      "NIC 2 Text": "Latitude 16.948927781399725 Longitude: 81.78673426472318",
+      "NIC 4 Text": "SNo. Nic 2 Digit Nic 4 Digit Nic 5 Digit Activity",
+      "NIC 5 Text": "1 56 - Food and beverage service activities 5629 - Other food service activities 56291 - Activities of food service contractors (e.g. for transportation companies) Services",
+      "activity": "Services"
+    }
+  ],
+  "Average_Confidence": null
+}

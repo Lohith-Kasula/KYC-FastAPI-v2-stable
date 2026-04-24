@@ -1,0 +1,27 @@
+[Tensorflow_Saved_Models]
+
+kyc_aadhar_classifier = "../saved_models/eff_model"
+skew_detection_model = "../saved_models/adhar_skewed_detection_04_10_2023"
+
+[Tensorflow_Trained_Labels]
+kyc_aadhar_classifier = ['aadhar_back', 'aadhar_back_print', 'aadhar_front','aadhar_front_print','aadhar_print','aadhar_scanned', 'pan', 'unknown']
+
+[PyTorch]
+    [PyTorch.AadharCropperFront]
+    model_save_path = "../saved_models/detection_model/Aadhar_front_print_cropper_model.pt"
+    state_dict_path = "../saved_models/detection_model/Aadhar_front_print_cropper.pt"
+    
+    [PyTorch.AadharCropperBack]
+    model_save_path = "../saved_models/detection_model/Aadhar_back_print_cropper_model.pt"
+    state_dict_path = "../saved_models/detection_model/Aadhar_back_print_cropper.pt"
+
+    [PyTorch.signaturecrop]
+    model_save_path = "../saved_models/torch-bbox_classifier_ver_1/Pan_signature_crop_model.pt"
+    state_dict_path = "../saved_models/torch-bbox_classifier_ver_1/Pan_signature_crop.pt"
+
+    [PyTorch.panCropperFront]
+    model_save_path = "../saved_models/torch-bbox_classifier_ver_1/scaned_pan_crop_model.pt"
+    state_dict_path = "../saved_models/torch-bbox_classifier_ver_1/scaned_pan_crop.pt"
+
+
+

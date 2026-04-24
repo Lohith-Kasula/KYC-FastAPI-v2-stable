@@ -1,0 +1,346 @@
+{
+    "status": "succeeded",
+    "createdDateTime": "2024-09-12T07:02:43Z",
+    "lastUpdatedDateTime": "2024-09-12T07:02:43Z",
+    "analyzeResult": {
+        "version": "3.0.0",
+        "readResults": [
+            {
+                "page": 1,
+                "angle": 0.2865,
+                "width": 440,
+                "height": 303,
+                "unit": "pixel",
+                "lines": [
+                    {
+                        "boundingBox": [
+                            174,
+                            48,
+                            327,
+                            48,
+                            327,
+                            63,
+                            174,
+                            63
+                        ],
+                        "text": "GOVERNMENT OF INDIA",
+                        "words": [
+                            {
+                                "boundingBox": [
+                                    174,
+                                    49,
+                                    267,
+                                    48,
+                                    267,
+                                    63,
+                                    175,
+                                    64
+                                ],
+                                "text": "GOVERNMENT",
+                                "confidence": 0.98
+                            },
+                            {
+                                "boundingBox": [
+                                    269,
+                                    48,
+                                    287,
+                                    49,
+                                    287,
+                                    63,
+                                    270,
+                                    63
+                                ],
+                                "text": "OF",
+                                "confidence": 0.988
+                            },
+                            {
+                                "boundingBox": [
+                                    290,
+                                    49,
+                                    328,
+                                    49,
+                                    328,
+                                    63,
+                                    290,
+                                    63
+                                ],
+                                "text": "INDIA",
+                                "confidence": 0.983
+                            }
+                        ]
+                    },
+                    {
+                        "boundingBox": [
+                            130,
+                            96,
+                            230,
+                            97,
+                            230,
+                            110,
+                            130,
+                            110
+                        ],
+                        "text": "Priti Praful Gada",
+                        "words": [
+                            {
+                                "boundingBox": [
+                                    131,
+                                    97,
+                                    154,
+                                    97,
+                                    155,
+                                    111,
+                                    131,
+                                    111
+                                ],
+                                "text": "Priti",
+                                "confidence": 0.985
+                            },
+                            {
+                                "boundingBox": [
+                                    157,
+                                    97,
+                                    193,
+                                    97,
+                                    193,
+                                    111,
+                                    157,
+                                    111
+                                ],
+                                "text": "Praful",
+                                "confidence": 0.983
+                            },
+                            {
+                                "boundingBox": [
+                                    196,
+                                    97,
+                                    230,
+                                    97,
+                                    230,
+                                    111,
+                                    196,
+                                    111
+                                ],
+                                "text": "Gada",
+                                "confidence": 0.986
+                            }
+                        ]
+                    },
+                    {
+                        "boundingBox": [
+                            131,
+                            120,
+                            298,
+                            121,
+                            298,
+                            135,
+                            131,
+                            134
+                        ],
+                        "text": "and / Year of Birth : 1971",
+                        "words": [
+                            {
+                                "boundingBox": [
+                                    156,
+                                    121,
+                                    173,
+                                    121,
+                                    173,
+                                    135,
+                                    156,
+                                    135
+                                ],
+                                "text": "and",
+                                "confidence": 0.562
+                            },
+                            {
+                                "boundingBox": [
+                                    176,
+                                    121,
+                                    183,
+                                    121,
+                                    183,
+                                    135,
+                                    176,
+                                    135
+                                ],
+                                "text": "/",
+                                "confidence": 0.964
+                            },
+                            {
+                                "boundingBox": [
+                                    186,
+                                    121,
+                                    213,
+                                    121,
+                                    213,
+                                    135,
+                                    186,
+                                    135
+                                ],
+                                "text": "Year",
+                                "confidence": 0.957
+                            },
+                            {
+                                "boundingBox": [
+                                    215,
+                                    121,
+                                    227,
+                                    121,
+                                    227,
+                                    136,
+                                    216,
+                                    135
+                                ],
+                                "text": "of",
+                                "confidence": 0.986
+                            },
+                            {
+                                "boundingBox": [
+                                    230,
+                                    121,
+                                    258,
+                                    121,
+                                    258,
+                                    136,
+                                    230,
+                                    136
+                                ],
+                                "text": "Birth",
+                                "confidence": 0.979
+                            },
+                            {
+                                "boundingBox": [
+                                    260,
+                                    121,
+                                    267,
+                                    121,
+                                    267,
+                                    136,
+                                    260,
+                                    136
+                                ],
+                                "text": ":",
+                                "confidence": 0.961
+                            },
+                            {
+                                "boundingBox": [
+                                    269,
+                                    121,
+                                    299,
+                                    121,
+                                    299,
+                                    135,
+                                    270,
+                                    135
+                                ],
+                                "text": "1971",
+                                "confidence": 0.981
+                            }
+                        ]
+                    },
+                    {
+                        "boundingBox": [
+                            130,
+                            138,
+                            204,
+                            140,
+                            204,
+                            154,
+                            130,
+                            152
+                        ],
+                        "text": "f/ Female",
+                        "words": [
+                            {
+                                "boundingBox": [
+                                    137,
+                                    139,
+                                    154,
+                                    139,
+                                    154,
+                                    153,
+                                    136,
+                                    153
+                                ],
+                                "text": "f/",
+                                "confidence": 0.593
+                            },
+                            {
+                                "boundingBox": [
+                                    157,
+                                    139,
+                                    204,
+                                    140,
+                                    204,
+                                    154,
+                                    156,
+                                    153
+                                ],
+                                "text": "Female",
+                                "confidence": 0.86
+                            }
+                        ]
+                    },
+                    {
+                        "boundingBox": [
+                            127,
+                            234,
+                            291,
+                            234,
+                            291,
+                            254,
+                            127,
+                            254
+                        ],
+                        "text": "4321 0656 5541",
+                        "words": [
+                            {
+                                "boundingBox": [
+                                    127,
+                                    235,
+                                    179,
+                                    235,
+                                    179,
+                                    254,
+                                    127,
+                                    255
+                                ],
+                                "text": "4321",
+                                "confidence": 0.986
+                            },
+                            {
+                                "boundingBox": [
+                                    183,
+                                    235,
+                                    235,
+                                    235,
+                                    235,
+                                    255,
+                                    183,
+                                    254
+                                ],
+                                "text": "0656",
+                                "confidence": 0.986
+                            },
+                            {
+                                "boundingBox": [
+                                    239,
+                                    235,
+                                    291,
+                                    235,
+                                    291,
+                                    255,
+                                    239,
+                                    255
+                                ],
+                                "text": "5541",
+                                "confidence": 0.983
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
