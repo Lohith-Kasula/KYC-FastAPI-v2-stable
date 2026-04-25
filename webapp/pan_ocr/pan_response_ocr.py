@@ -7,6 +7,7 @@ import statistics
 import logging
 
 logger = logging.getLogger(__name__)
+uvicorn_logger = logging.getLogger(__name__)
 
 '''
 PAN Validation checks:
@@ -457,11 +458,11 @@ def config_jsonfile(array_text,og_lines_data):
                             pass
                 try:
                     if array_text.index(data) in range(Lower_range,Upper_range) : #rescent) array_text.index(data) in range(2,Upper_range) # 1) array_text.index(data) in range(2,5)
-                        print("New format PAN Card")
+                        uvicorn_logger.info("New format PAN Card")
                         final_values =  newformatPAN(array_text,is_company,is_veryold,og_lines_data)
                         
                     elif array_text.index(data) in range(Upper_range,8): #array_text.index(data) in range(5,8)
-                        print("Old Format PAN card")
+                        uvicorn_logger.info("Old Format PAN card")
                         final_values = oldformatPAN(array_text,is_company,og_lines_data)
 
                 except Exception as e:

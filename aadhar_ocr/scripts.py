@@ -10,11 +10,6 @@ import json
 import imutils
 import torch
 import torchvision
-# from torch.utils.data import DataLoader, random_split
-# from torchvision.transforms import functional as F
-# from torchvision.models.detection import FasterRCNN
-# from torchvision.models.detection.rpn import AnchorGenerator
-# from torchvision import transforms
 from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor
 

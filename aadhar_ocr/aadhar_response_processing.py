@@ -13,6 +13,7 @@ import logging
 #Setting the Loggers
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+uvicorn_logger = logging.getLogger("uvicorn")
 # Reading the json data, which is obtained from the azure ocr api
 
 #=================uncomment bellow to get simple ocr====================
@@ -260,11 +261,12 @@ def adr_front(image_front): # Pass the json data to the function
     full_text_lines = [line['text'] for line in lines_data]
     full_text = "\n".join(full_text_lines)
 
-    print("\n===== FULL OCR TEXT (AADHAAR FRONT) =====\n")
-    print(full_text)
-    print("\n========================================\n")
-        #front = False
-    #header_found = False
+    uvicorn_logger.info(
+    f"\n{'=' * 6} FULL OCR TEXT (AADHAAR FRONT) {'=' * 6}\n"
+    f"{full_text}\n"
+    f"{'=' * 43}\n"
+    )
+
     confidence_counter = 0
 
     for ld in lines_data:
@@ -678,7 +680,7 @@ def adr_back_get_address(image_back): # Pass the json data to the function
             else:
                 pass
         final_address = ' '.join(final_text)
-        print("final_text",final_text)
+        # print("final_text",final_text)
         #print("sentence bbox: ",sentence_bbox)
         #print("final_address: ",final_address,'len(final_address) ',len(final_address.split()))
         #print("address_confidence: ",address_confidence,'len(address_confidence) ',len(address_confidence)

@@ -867,7 +867,6 @@ def compare_ssim(path1, path2):
     return float(similarity_value)
 
 # ------------------------------------------------------aadhar-ocr -----------------------------------------------------------------------
-import resize_image
 class IncompleteResponse(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -902,8 +901,12 @@ async def aadhar_ocr(
     import os
     import uuid
     import re
+    import warnings
+    import resize_image
     from fastapi.encoders import jsonable_encoder
     from PIL import Image
+    warnings.filterwarnings("ignore", category=UserWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     def safe_lower(value):
         return value.lower().strip() if isinstance(value, str) else ""
@@ -911,11 +914,9 @@ async def aadhar_ocr(
     def clean_numeric(value):
         return re.sub(r"\D", "", value) if isinstance(value, str) else ""
     
-
+    logger.info("aadhar-ocr API called and image uploaded")
     # -------------------- READ FILE --------------------
     adhaar_file_bytes = await adhaar_file.read()
-
-    logger.info(f"Client IP: {request.client.host}")
 
     adhaar_front = None
     adhaar_back = None
@@ -924,6 +925,7 @@ async def aadhar_ocr(
     req_id = lead_id + '-' + client_name + '-' + req_id
     save_dir = f"../completed_requests/{req_id}"
     os.makedirs(save_dir, exist_ok=True)
+
 
     # -------------------- DETECT FILE TYPE --------------------
     content_type = adhaar_file.content_type
@@ -935,7 +937,18 @@ async def aadhar_ocr(
     elif adhaar_file_bytes[:3] == b"\xff\xd8\xff":
         content_type = "image/jpeg"
 
-    logger.info(f"Detected Content Type: {content_type}")
+
+    logger.info(f"""
+    {'=' * 43} File Details {'=' * 43}
+                
+    Uploaded File : {adhaar_file.filename}
+    File Size     : {adhaar_file.size}
+    Client IP     : {request.client.host}
+    Content Type  : {content_type}
+    save_dir : {save_dir}
+
+    {'=' * 100}
+    """)
 
     # -------------------- PDF → IMAGE --------------------
     if content_type == "application/pdf":
@@ -974,7 +987,14 @@ async def aadhar_ocr(
 
     # -------------------- DOC TYPE CLASSIFICATION --------------------
     doctype = kyc_aadhar_classifier.predict_doc_type(img_save_path, debug=False)
-    logger.info(f"DocType: {doctype}")
+    logger.info(f"""
+    {'=' * 10} Classifier Prediction {'=' * 10}
+                
+    Label : {doctype['label']}
+    Score : {doctype['score']}
+
+    {'=' * 43}
+    """)
 
     if doctype and "label" in doctype:
 
@@ -1082,9 +1102,7 @@ async def aadhar_ocr(
         "Accuracy_Overall": "N/A",
         "Pincode": "",
         "City": "",
-        "State": "",
-        "Fields_Missing":[],
-        "Message" : "N/A"
+        "State": ""
     }
 
     front_details = aadhar_ocr_response.get("front_details", {})
@@ -1105,9 +1123,12 @@ async def aadhar_ocr(
             final_json_response["Accuracy_Front"] = f"{front_acc}%"
 
     # -------------------- EXTRACT BACK --------------------
-    print(f'adhaar_back : {adhaar_back}')
+    # print(f'adhaar_back : {adhaar_back}')
     if adhaar_back is not None:
-        print(f'%%%%%%%%%%%%%%%%% back_details: {back_details}')
+        print("\n====== FULL OCR TEXT (AADHAAR BACK) =======")
+        for k, v in back_details.items():
+            print(f'{k}:{v}')
+        print("===========================================\n")
         if back_details is not None:
             final_json_response["Address"] = back_details.get("Address", "")
             final_json_response["Bounding_Box_Back"] = back_details.get("Bounding_Box", {})
@@ -1129,33 +1150,40 @@ async def aadhar_ocr(
     if safe_lower(final_json_response["Gender"]) not in ["male", "female"]:
         final_json_response["Gender"] = ""
 
+    #--------------------- All Required fields validation -----------
+    unclear_msg = "Could not process the document. Please ensure the document is " \
+        "clearly visible, placed close to the camera, and captured without excessive lighting."
     
-    fields_extracted = {}
-    req_fields = ["Name", "DOB", "Aadhaar_Number", "Gender"]
+    if adhaar_front is not None:
+        fields_extracted = {}
+        req_fields = ["Name", "DOB", "Aadhaar_Number", "Gender"]
 
-    if final_json_response["Name"] != "":
-        fields_extracted["Name"] = final_json_response["Name"]
-    if final_json_response["DOB"] != '':
-        fields_extracted["DOB"] = final_json_response["DOB"]
-    if final_json_response["Aadhaar_Number"] != '':
-        fields_extracted["Aadhaar_Number"] = final_json_response["Aadhaar_Number"]
-    if final_json_response["Gender"] != "":
-        fields_extracted["Gender"] = final_json_response["Gender"]
+        for req_field in req_fields:
+            if final_json_response[req_field] != "":
+                fields_extracted[req_field] = final_json_response[req_field]
 
-    exp_msg = ''
-    miss_field_msg = ''
-    print(f'fields_extracted: {fields_extracted}')
-    missing_fields = [f for f in req_fields if f not in list(fields_extracted.keys())]
+        exp_msg = ''
+        miss_field_msg = ''
+        logger.info(f'Fields extracted: {fields_extracted}')
+        missing_fields = [f for f in req_fields if f not in list(fields_extracted.keys())]
 
-    if len(missing_fields) >= 3:
-        exp_msg = "Could not process the document. Please ensure the document is \
-            clearly visible, placed close to the camera, and captured without excessive lighting."
-    elif len(missing_fields) >= 1 and len(missing_fields) < 3:
-        miss_field_msg = ', '.join(missing_fields)
-        exp_msg = f"Partial details detected,  Fields {miss_field_msg} could not be read." 
+        if len(missing_fields) >= 3:
+            exp_msg = unclear_msg
+        elif len(missing_fields) >= 1 and len(missing_fields) < 3:
+            if len(missing_fields) == 2:
+                miss_field_msg = ' & '.join(missing_fields)
+            elif len(missing_fields) == 1:  
+                miss_field_msg = missing_fields[0]
+            exp_msg = f"Partial details detected,  Fields {miss_field_msg} could not be read."
+        
+        if missing_fields:
+            logger.info(f'Fields Missed: {missing_fields}') 
 
-    if exp_msg:
-        return jsonable_encoder({"message": exp_msg})
+        if exp_msg:
+            return jsonable_encoder({"message": exp_msg})
+    
+    if (adhaar_back is not None) and (final_json_response['Address'] == ""):
+        return jsonable_encoder({"message": unclear_msg})
 
     # -------------------- ADDRESS PROCESSING --------------------
     addr = final_json_response.get("Address") or ""
@@ -1212,7 +1240,7 @@ def pan_ocr(
 
 ):
     logger.info(request.client.host)
-    logger.debug("pan-ocr1 API called and image uploaded")
+    logger.info("pan-ocr API called and image uploaded")
 
     req_id = str(uuid.uuid4())
     req_id = lead_id + '-' + client_name + '-' + req_id
@@ -1221,29 +1249,26 @@ def pan_ocr(
     message = "Could not process the input file"
 
     if pan_image:
-        uploaded_filename_pan_image = pan_image.filename
-        pan_image_format = pan_image.content_type
-        logger.info("PAN image name: " + uploaded_filename_pan_image)
-        pan_image = pan_image.file.read()
+        pan_file_bytes = pan_image.file.read()
 
     try:
         # File type detection
-        if isinstance(pan_image, bytes):
-            if pan_image[:5] == b'%PDF-':
+        if isinstance(pan_file_bytes, bytes):
+            if pan_file_bytes[:5] == b'%PDF-':
                 pan_image_format = "application/pdf"
-            elif pan_image[:5] == b'\x89PNG\r':
+            elif pan_file_bytes[:5] == b'\x89PNG\r':
                 pan_image_format = "image/png"
-            elif b'\xff\xd8\xff' in pan_image[:5]:
+            elif b'\xff\xd8\xff' in pan_file_bytes[:5]:
                 pan_image_format = "image/jpeg"
             else:
                 return JSONResponse(content={"message": "Unsupported file type"}, status_code=400)
 
         # Convert to PIL Image
         if pan_image_format == 'application/pdf':
-            pan_image = pdf_2_image.pdf_2_image_converter(pan_image)
-            image = Image.open(io.BytesIO(pan_image))
+            pan_file_bytes = pdf_2_image.pdf_2_image_converter(pan_file_bytes)
+            image = Image.open(io.BytesIO(pan_file_bytes))
         else:
-            image = Image.open(io.BytesIO(pan_image))
+            image = Image.open(io.BytesIO(pan_file_bytes))
 
         width, height = image.size
         if width < resizing_threshold or height < resizing_threshold:
@@ -1254,6 +1279,18 @@ def pan_ocr(
         img_save_path = f"../completed_requests/{req_id}/pan.png"
         image.save(img_save_path)
 
+        logger.info(f"""
+        {'=' * 43} File Details {'=' * 43}
+                
+        Uploaded File : {pan_image.filename}
+        File Size     : {pan_image.size}
+        Client IP     : {request.client.host}
+        Content Type  : {pan_image.content_type}
+        save_dir_path : {img_save_path}
+
+        {'=' * 100}
+        """)
+
         # Skew correction
         result = scripts.skew_detection(img_save_path, debug=False)
         cv.imwrite(img_save_path, result)
@@ -1262,6 +1299,14 @@ def pan_ocr(
 
         # PAN doc classifier
         doctype_classifier_result =  kyc_aadhar_classifier.predict_doc_type(img_save_path, debug=False)
+        logger.info(f"""
+        {'=' * 10} Classifier Prediction {'=' * 10}
+                
+        Label : {doctype_classifier_result['label']}
+        Score : {doctype_classifier_result['score']}
+
+        {'=' * 43}
+        """)
 
 
         if doctype_classifier_result['label'] !='pan':
@@ -1333,7 +1378,6 @@ def pan_ocr(
             if fuzz.ratio(pan_details["Entity_Type"].lower(), pan_ocr_response.get("Entity_Type", "").lower()) > 95:
                 conf_counter["Entity_Type"] = True
 
-            return jsonable_encoder(final_json_response)
 
         else:
             if pan_ocr_response.get("Is_company"):
@@ -1356,6 +1400,37 @@ def pan_ocr(
                     'Accuracy': str(round(pan_ocr_response.get("Accuracy", 0))) + '%'
                 }
 
+        #--------------------- All Required fields validation -----------
+        unclear_msg = "Could not process the document. Please ensure the document is " \
+        "clearly visible, placed close to the camera, and captured without excessive lighting."
+    
+        fields_extracted = {}
+        req_fields = ["Name", "Father's_Name", "DOB", "PAN_Number", "Entity_type"]
+
+        for req_field in req_fields:
+            if final_json_response[req_field] != "":
+                fields_extracted[req_field] = final_json_response[req_field]
+
+        exp_msg = ''
+        miss_field_msg = ''
+        logger.info(f'Fields extracted: {fields_extracted}')
+        missing_fields = [f for f in req_fields if f not in list(fields_extracted.keys())]
+
+        if len(missing_fields) >= 3:
+            exp_msg = unclear_msg
+        elif len(missing_fields) >= 1 and len(missing_fields) < 3:
+            if len(missing_fields) == 2:
+                miss_field_msg = ' & '.join(missing_fields)
+            elif len(missing_fields) == 1:  
+                miss_field_msg = missing_fields[0]
+            exp_msg = f"Partial details detected,  Fields {miss_field_msg} could not be read."
+        
+        if missing_fields:
+            logger.info(f'PAN - Fields Missed: {missing_fields}') 
+
+        if exp_msg:
+            return jsonable_encoder({"message": exp_msg}) 
+        else:   
             return jsonable_encoder(final_json_response)
 
     except Exception as e:

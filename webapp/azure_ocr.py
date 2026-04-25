@@ -5,6 +5,8 @@ import time
 from PIL import Image
 from io import BytesIO
 import configparser
+import logging
+logger = logging.getLogger("uvicorn")
 
 # Add your Computer Vision subscription key and endpoint to your environment variables.
 config = configparser.ConfigParser()
@@ -37,7 +39,7 @@ def azure_call(image_string):
         text_recognition_url, headers=headers,  data=image_bytes) #language='en',
     #print(response, response.json())
     response.raise_for_status()
-    print("response:",response)
+    logger.info(f"azure_call {response}")
 
 
    
